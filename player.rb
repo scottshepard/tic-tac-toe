@@ -13,7 +13,7 @@ class Player
     @moves
   end
 
-  def move(space)
+  def move!(space)
     @moves[space-1] = space
   end
 
