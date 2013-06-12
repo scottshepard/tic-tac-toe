@@ -1,6 +1,6 @@
 class Player
   
-  def create(name)
+  def initialize(name)
     @name = name
     @moves = []
   end
@@ -14,7 +14,7 @@ class Player
   end
 
   def move!(space)
-    @moves[space-1] = space
+    (@moves << space).compact!
   end
 
 end
