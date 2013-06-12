@@ -58,18 +58,6 @@ class Game
     end
   end
 
-    # until board.is_full?(player1, player2) || board.three_in_a_row?(player1) || board.three_in_a_row?(player2)
-    #   play_round(player1, player2)
-    #   puts player1.moves
-    #   board.display(player1,player2)
-    #   unless board.is_full?(player1, player2) || board.three_in_a_row?(player1) || board.three_in_a_row?(player2)
-    #     play_round(player2, player1)
-    #     puts player2.moves
-    #     board.display(player1, player2)
-    #   end
-    # end
-    #end
-
   def play_round(p1,p2)
     print "your move:"
     move = gets.chomp.to_i
