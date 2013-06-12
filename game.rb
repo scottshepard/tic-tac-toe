@@ -30,17 +30,45 @@ class Game
 
   def two_player_game(player1, player2, board)
     board.display(player1, player2)
-    until board.is_full?(player1, player2) || board.three_in_a_row?(player1) || board.three_in_a_row?(player2)
+    if board.is_full?(player1, player2)
+      puts "Cats game, no winner"
+      return
+    elsif board.three_in_a_row?(player1)
+      puts "#{player1.name} wins!"
+      return
+    elsif board.three_in_a_row?(player2)
+      puts "#{player2.name} wins!"
+      return
+    else
+      board.display(player1, player2)
       play_round(player1, player2)
-      puts player1.moves
-      board.display(player1,player2)
-      unless board.is_full?(player1, player2) || board.three_in_a_row?(player1) || board.three_in_a_row?(player2)
+      if board.is_full?(player1, player2)
+        puts "Cats game, no winner"
+        return
+      elsif board.three_in_a_row?(player1)
+        puts "#{player1.name} wins!"
+        return
+      elsif board.three_in_a_row?(player2)
+        puts "#{player2.name} wins!"
+        return
+      else
         play_round(player2, player1)
-        puts player2.moves
-        board.display(player1, player2)
+        two_player_game(player1, player2, board)
       end
     end
   end
+
+    # until board.is_full?(player1, player2) || board.three_in_a_row?(player1) || board.three_in_a_row?(player2)
+    #   play_round(player1, player2)
+    #   puts player1.moves
+    #   board.display(player1,player2)
+    #   unless board.is_full?(player1, player2) || board.three_in_a_row?(player1) || board.three_in_a_row?(player2)
+    #     play_round(player2, player1)
+    #     puts player2.moves
+    #     board.display(player1, player2)
+    #   end
+    # end
+    #end
 
   def play_round(p1,p2)
     print "your move:"
