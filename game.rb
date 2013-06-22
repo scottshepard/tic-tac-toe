@@ -3,7 +3,7 @@ require_relative 'player'
 
 class Game
 
-  def play
+  def play_game
     rules
     board = Board.new
     print "Will you be playing one player or two player?: "
@@ -29,37 +29,31 @@ class Game
   end
 
   def two_player_game(player1, player2, board)
-    board.display(player1, player2)
+    play_round(player1, player2, board)
+    return if game_over?(player1, player2, board)
+    play_round(player2, player1, board)
+    return if game_over?(player1, player2, board)
+    two_player_game(player1, player2, board) 
+  end
+
+  def game_over?(player1, player2, board)
     if board.is_full?(player1, player2)
       puts "Cats game, no winner"
-      return
+      true
     elsif board.three_in_a_row?(player1)
       puts "#{player1.name} wins!"
-      return
+      true
     elsif board.three_in_a_row?(player2)
       puts "#{player2.name} wins!"
-      return
+      true
     else
-      board.display(player1, player2)
-      play_round(player1, player2)
-      if board.is_full?(player1, player2)
-        puts "Cats game, no winner"
-        return
-      elsif board.three_in_a_row?(player1)
-        puts "#{player1.name} wins!"
-        return
-      elsif board.three_in_a_row?(player2)
-        puts "#{player2.name} wins!"
-        return
-      else
-        play_round(player2, player1)
-        two_player_game(player1, player2, board)
-      end
+      false
     end
   end
 
-  def play_round(p1,p2)
-    print "your move:"
+  def play_round(p1, p2, board)
+    board.display(p1, p2)
+    print "#{p1.name}'s move: "
     move = gets.chomp.to_i
     unless [1,2,3,4,5,6,7,8,9].include? move  
       puts "Invalid move, please play again"
@@ -93,6 +87,6 @@ class Game
   end
 
 
-  Game.new.play
+  Game.new.play_game
 
 end
