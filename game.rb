@@ -15,7 +15,9 @@ class Game
     print "Enter player 1's name: "
     player1 = Player.new(gets.chomp)
     if num_players == 1
-      one_player_game(player1, board)
+      computer = Player.new("computer")
+      puts "Would you like to go first or second?: "
+      one_player_game(player1, computer, board, get_preference)
     else
       print "Enter player 2's name: "
       player2 = Player.new(gets.chomp)
@@ -23,9 +25,33 @@ class Game
     end
   end
 
-  def one_player_game(player1, board)
-    computer = Player.new("computer")
-    board.display(player1, computer)
+  def one_player_game(human, computer, board, preference)
+    board.display(human, computer)
+    if get_preference == 1
+      play_round(human, computer, board)
+      return if game_over?(human, computer, board)
+      play_computer_round(human, computer, board)
+      return if game_over?(human, computer, board)
+    else
+      play_computer_round(human, computer, board)
+      return if game_over?(human, computer, board)
+      play_round(human, computer, board)
+      return if game_over?(human, computer, board)
+    end
+    one_player_game(human, computer, board, preference)
+  end
+
+  def play_computer_round(human, computer, board)
+    
+  end
+
+  def get_preference
+    preference = get.chomp.to_i
+    unless preference == 1 || 2
+      puts "Invalid choice, please choose again"
+      get_preference
+    end
+    preference
   end
 
   def two_player_game(player1, player2, board)
