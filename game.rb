@@ -2,9 +2,8 @@ require_relative 'board'
 require_relative 'player'
 
 class Game
-  def play_game
+  def play
     rules
-    board = Board.new
     print "Will you be playing one player or two player?: "
     num_players = gets.chomp.to_i
     unless num_players == 1 || 2
@@ -12,88 +11,91 @@ class Game
       num_players = gets.chomp.to_i
     end
     print "Enter player 1's name: "
-    player1 = Player.new(gets.chomp)
     if num_players == 1
-      computer = Player.new("computer")
+      @human = Player.new(gets.chomp)
+      @computer = Player.new("computer")
+      @board = Board.new(@human, @computer)
       print "Would you like to go first or second?: "
-      one_player_game(player1, computer, board, get_preference)
+      one_player_game(get_preference)
     else
+      @player1 = Player.new(gets.chomp)
       print "Enter player 2's name: "
-      player2 = Player.new(gets.chomp)
-      two_player_game(player1, player2, board)
+      @player2 = Player.new(gets.chomp)
+      @board = Board.new(@player1, @player2)
+      two_player_game
     end
   end
 
-  def one_player_game(human, computer, board, preference)
-    board.display(human, computer)
+  def one_player_game(preference)
+    @board.display
     if get_preference == 1
-      play_round(human, computer, board)
-      return if game_over?(human, computer, board)
-      play_computer_round(human, computer, board)
-      return if game_over?(human, computer, board)
+      play_round(@human, @computer)
+      return if game_over?
+      play_computer_round(@human, @computer)
+      return if game_over?
     else
-      play_computer_round(human, computer, board)
-      return if game_over?(human, computer, board)
-      play_round(human, computer, board)
-      return if game_over?(human, computer, board)
+      play_computer_round(@human, @computer)
+      return if game_over?
+      play_round(@human, @computer)
+      return if game_over?
     end
-    one_player_game(human, computer, board, preference)
+    one_player_game(preference)
   end
 
-  def play_computer_round(human, computer, board)
+  def play_computer_round(human, computer)
     if human.has_winning_move?
       block_opponent
-    elsif board.is_middle_open?
-      computer.play_middle
+    elsif @board.is_middle_open?
+      @computer.play_middle!
     else
-
+    end
   end
 
   def get_preference
     preference = gets.chomp.to_i
     unless preference == 1 || 2
-      puts "Invalid choice, please choose again"
+      print "Invalid choice, please choose again: "
       get_preference
     end
     preference
   end
 
-  def two_player_game(player1, player2, board)
-    play_round(player1, player2, board)
-    return if game_over?(player1, player2, board)
-    play_round(player2, player1, board)
-    return if game_over?(player1, player2, board)
-    two_player_game(player1, player2, board) 
+  def two_player_game
+    play_round(@player1, @player2)
+    return if game_over?
+    play_round(@player2, @player1)
+    return if game_over?
+    two_player_game 
   end
 
-  def game_over?(player1, player2, board)
-    if board.is_full?(player1, player2)
+  def game_over?
+    if @board.is_full?
       puts "Cats game, no winner"
       true
-    elsif board.three_in_a_row?(player1)
-      puts "#{player1.name} wins!"
+    elsif @board.three_in_a_row?(@player1)
+      puts "#{@player1.name} wins!"
       true
-    elsif board.three_in_a_row?(player2)
-      puts "#{player2.name} wins!"
+    elsif @board.three_in_a_row?(@player2)
+      puts "#{@player2.name} wins!"
       true
     else
       false
     end
   end
 
-  def play_round(p1, p2, board)
-    board.display(p1, p2)
+  def play_round(p1, p2)
+    @board.display
     print "#{p1.name}'s move: "
     move = gets.chomp.to_i
     unless [1,2,3,4,5,6,7,8,9].include? move  
       puts "Invalid move, please play again"
-      play_round(p1, p2, board)
+      play_round(p1, p2)
     end
     unless (p1.moves.include? move) or (p2.moves.include? move)
       p1.move!(move)
     else
       puts "Space already taken please play again"
-      play_round(p1, p2, board)
+      play_round(p1, p2)
     end
   end
 
@@ -115,5 +117,5 @@ class Game
     print p1.moves
     puts board.three_in_a_row?(p1)
   end
-  Game.new.play_game
+  Game.new.play
 end

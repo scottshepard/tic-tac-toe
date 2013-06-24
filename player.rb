@@ -16,7 +16,7 @@ class Player
     (@moves << space).compact!
   end
 
-  def play_middle
+  def play_middle!
     self.move!(5)
   end
 end
