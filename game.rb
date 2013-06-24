@@ -12,9 +12,9 @@ class Game
     end
     print "Enter player 1's name: "
     if num_players == 1
-      @human = Player.new(gets.chomp)
-      @computer = Player.new("computer")
-      @board = Board.new(@human, @computer)
+      @player1 = Player.new(gets.chomp)
+      @player2 = Player.new("computer")
+      @board = Board.new(@player1, @player2)
       print "Would you like to go first or second?: "
       one_player_game(get_preference)
     else
@@ -27,28 +27,32 @@ class Game
   end
 
   def one_player_game(preference)
-    @board.display
-    if get_preference == 1
-      play_round(@human, @computer)
+    if preference == 1
+      play_round(@player1, @player2)
       return if game_over?
-      play_computer_round(@human, @computer)
+      play_computer_round
       return if game_over?
     else
-      play_computer_round(@human, @computer)
+      play_computer_round
       return if game_over?
-      play_round(@human, @computer)
+      play_round(@player1, @player2)
       return if game_over?
     end
     one_player_game(preference)
   end
 
-  def play_computer_round(human, computer)
-    if human.has_winning_move?
-      block_opponent
+  def play_computer_round
+    @board.update!
+    if (move = @board.winning_move(@player1))
+      @player2.move!(move)
+    elsif (move = @board.winning_move(@player2))
+      @player2.move!(move)
     elsif @board.is_middle_open?
-      @computer.play_middle!
-    else
+      @player2.play_middle!
+    elsif (move = @board.corner_open)
+      @player2.move!(move)
     end
+    puts "The Computer has gone at space #{move}"
   end
 
   def get_preference
@@ -71,12 +75,15 @@ class Game
   def game_over?
     if @board.is_full?
       puts "Cats game, no winner"
+      @board.display
       true
     elsif @board.three_in_a_row?(@player1)
       puts "#{@player1.name} wins!"
+      @board.display
       true
     elsif @board.three_in_a_row?(@player2)
       puts "#{@player2.name} wins!"
+      @board.display
       true
     else
       false

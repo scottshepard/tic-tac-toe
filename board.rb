@@ -38,20 +38,18 @@ class Board
   # returns false if occupied or no two moves in a row
   # returns the number of the third space if it is open
   def winning_move(player)
-    answer = false
     if player.moves.length >= 2
-      @wins.each do |win|
-        for move in win
-          answer = move if ((win - [move]) - player.moves).empty?
+      @wins.each do |win| 
+        win.each do |move|
+          return move if ((win - [move]) - player.moves).empty? && space_open?(move)
         end
       end
     end
-    if answer 
-      if (@moves[answer - 1] == 'X') || (@moves[answer - 1] == 'O')
-       answer = false
-     end
-    end
-    answer
+    false
+  end
+
+  def space_open?(space)
+    @moves[space - 1] == space.to_s
   end
 
   def moves
@@ -63,6 +61,13 @@ class Board
   end
 
   def is_middle_open?
-    @moves[4] != '5'
+    space_open?(5)
+  end
+
+  def corner_open
+    1 if space_open?(1)
+    3 if space_open?(3)
+    7 if space_open?(7)
+    9 if space_open?(9)
   end  
 end
