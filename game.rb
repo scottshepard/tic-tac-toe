@@ -2,7 +2,6 @@ require_relative 'board'
 require_relative 'player'
 
 class Game
-
   def play_game
     rules
     board = Board.new
@@ -16,7 +15,7 @@ class Game
     player1 = Player.new(gets.chomp)
     if num_players == 1
       computer = Player.new("computer")
-      puts "Would you like to go first or second?: "
+      print "Would you like to go first or second?: "
       one_player_game(player1, computer, board, get_preference)
     else
       print "Enter player 2's name: "
@@ -42,11 +41,16 @@ class Game
   end
 
   def play_computer_round(human, computer, board)
-    
+    if human.has_winning_move?
+      block_opponent
+    elsif board.is_middle_open?
+      computer.play_middle
+    else
+
   end
 
   def get_preference
-    preference = get.chomp.to_i
+    preference = gets.chomp.to_i
     unless preference == 1 || 2
       puts "Invalid choice, please choose again"
       get_preference
@@ -83,13 +87,13 @@ class Game
     move = gets.chomp.to_i
     unless [1,2,3,4,5,6,7,8,9].include? move  
       puts "Invalid move, please play again"
-      play_round(p1,p2)
+      play_round(p1, p2, board)
     end
     unless (p1.moves.include? move) or (p2.moves.include? move)
       p1.move!(move)
     else
       puts "Space already taken please play again"
-      play_round(p1,p2)
+      play_round(p1, p2, board)
     end
   end
 
@@ -111,8 +115,5 @@ class Game
     print p1.moves
     puts board.three_in_a_row?(p1)
   end
-
-
   Game.new.play_game
-
 end
