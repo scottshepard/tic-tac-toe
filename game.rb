@@ -42,12 +42,13 @@ class Game
 
   def play_computer_round
     @board.update!
-    if (move = @board.winning_move(@player1))
+    if (move = @board.winning_move(@player2))
       @player2.move!(move)
-    elsif (move = @board.winning_move(@player2))
+    elsif (move = @board.winning_move(@player1))
       @player2.move!(move)
     elsif @board.is_middle_open?
       @player2.play_middle!
+      move = 5
     elsif (move = @board.corner_open)
       @player2.move!(move)
     end
@@ -77,11 +78,11 @@ class Game
     move = gets.chomp.to_i
     unless [1,2,3,4,5,6,7,8,9].include? move  
       puts "Invalid move, please play again"
-      play_round
+      play_round(p1, p2)
     end
-    elsif (p1.moves.include? move) or (p2.moves.include? move)
+    if (p1.moves.include? move) or (p2.moves.include? move)
       puts "Space already taken please play again"
-      play_round
+      play_round(p1, p2)
     else
       p1.move!(move)
     end

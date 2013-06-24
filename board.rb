@@ -33,10 +33,6 @@ class Board
     answer
   end
 
-  # tests if a player has two moves in a row
-  # if it does checks if the third space is occupied
-  # returns false if occupied or no two moves in a row
-  # returns the number of the third space if it is open
   def winning_move(player)
     if player.moves.length >= 2
       @wins.each do |win| 
@@ -64,10 +60,17 @@ class Board
     space_open?(5)
   end
 
+  # this doesn't work somehow?
   def corner_open
-    1 if space_open?(1)
-    3 if space_open?(3)
-    7 if space_open?(7)
-    9 if space_open?(9)
+    case
+    when space_open?(1)
+      1
+    when space_open?(3)
+      3
+    when space_open?(7)
+      7
+    when space_open?(9)
+      9
+    end
   end  
 end
