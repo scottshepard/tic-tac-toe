@@ -11,14 +11,13 @@ class Game
       num_players = gets.chomp.to_i
     end
     print "Enter player 1's name: "
+    @player1 = Player.new(gets.chomp)
     if num_players == 1
-      @player1 = Player.new(gets.chomp)
       @player2 = Player.new("computer")
       @board = Board.new(@player1, @player2)
       print "Would you like to go first or second?: "
       one_player_game(get_preference)
     else
-      @player1 = Player.new(gets.chomp)
       print "Enter player 2's name: "
       @player2 = Player.new(gets.chomp)
       @board = Board.new(@player1, @player2)
@@ -72,6 +71,22 @@ class Game
     two_player_game 
   end
 
+  def play_round(p1, p2)
+    @board.display
+    print "#{p1.name}'s move: "
+    move = gets.chomp.to_i
+    unless [1,2,3,4,5,6,7,8,9].include? move  
+      puts "Invalid move, please play again"
+      play_round
+    end
+    elsif (p1.moves.include? move) or (p2.moves.include? move)
+      puts "Space already taken please play again"
+      play_round
+    else
+      p1.move!(move)
+    end
+  end
+
   def game_over?
     if @board.is_full?
       puts "Cats game, no winner"
@@ -90,39 +105,8 @@ class Game
     end
   end
 
-  def play_round(p1, p2)
-    @board.display
-    print "#{p1.name}'s move: "
-    move = gets.chomp.to_i
-    unless [1,2,3,4,5,6,7,8,9].include? move  
-      puts "Invalid move, please play again"
-      play_round(p1, p2)
-    end
-    unless (p1.moves.include? move) or (p2.moves.include? move)
-      p1.move!(move)
-    else
-      puts "Space already taken please play again"
-      play_round(p1, p2)
-    end
-  end
-
   def rules
-    puts "Welcome to Tic Tac Toe!"
-    puts "You will be playing against the computer or another player."
-    puts "The board will look like a square of numbers."
-    puts "When prompted please select the number of the space you wish to place your shape."
-  end
-  
-  def test
-    p1 = Player.new("Scott")
-    p2 = Player.new("Kelly")
-    board = Board.new
-    board.display(p1,p2)
-    p1.move!(1)
-    p1.move!(5)
-    p1.move!(7)
-    print p1.moves
-    puts board.three_in_a_row?(p1)
+    puts "Welcome to Tic Tac Toe!\nYou will be playing against the computer or another player.\nThe board will look like a square of numbers.\nWhen prompted please select the number of the space you wish to place your shape."
   end
   Game.new.play
 end
