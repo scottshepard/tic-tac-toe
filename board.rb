@@ -62,7 +62,7 @@ class Board
 
   # this doesn't work somehow?
   def corner_open
-    case
+    case 
     when space_open?(1)
       1
     when space_open?(3)

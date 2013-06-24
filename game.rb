@@ -5,7 +5,7 @@ class Game
   def play
     rules
     print "Will you be playing one player or two player?: "
-    num_players = gets.chomp.to_i
+    num_players = number(gets.chomp)
     unless num_players == 1 || 2
       puts "Invalid number of players"
       num_players = gets.chomp.to_i
@@ -56,7 +56,7 @@ class Game
   end
 
   def get_preference
-    preference = gets.chomp.to_i
+    preference = number(gets.chomp)
     unless preference == 1 || 2
       print "Invalid choice, please choose again: "
       get_preference
@@ -108,6 +108,17 @@ class Game
 
   def rules
     puts "Welcome to Tic Tac Toe!\nYou will be playing against the computer or another player.\nThe board will look like a square of numbers.\nWhen prompted please select the number of the space you wish to place your shape."
+  end
+
+  def number(string)
+    case
+    when string.to_i != 0
+      string.to_i
+    when (string =~ /one/i), (string =~ /first/i)
+      1
+    when (string =~ /two/i), (string =~ /second/i)
+      2
+    end
   end
   Game.new.play
 end
