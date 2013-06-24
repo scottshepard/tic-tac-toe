@@ -17,6 +17,6 @@ class Player
   end
 
   def play_middle!
-    self.move!(5)
+    move!(5)
   end
 end
